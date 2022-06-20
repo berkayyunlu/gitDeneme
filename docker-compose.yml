@@ -1,0 +1,35 @@
+# ./docker-compose.yml
+
+version: '3'
+
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+    container_name: php_web
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - ./php/:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
+  db:
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: sail
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    ports:
+      - "3306:3306"
+    volumes : 
+      - 'mysql:/var/lib/mysql'
+volumes:
+  mysql:
+    driver: local
